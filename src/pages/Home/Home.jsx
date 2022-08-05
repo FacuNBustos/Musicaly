@@ -1,9 +1,13 @@
 
-import React, { useState } from 'react';
+import React, { useRef, useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import logo from '../../assets/logo.png';
+import Validate from '../../services/searchValidate.service';
 
 
 const Home = () => {
+
+  const navigate = useNavigate();
 
   const [screenWidth, setScreenWidth] = useState(screen.width);
   window.addEventListener('resize', handleChangeScreenWidth);
@@ -11,13 +15,19 @@ const Home = () => {
     setScreenWidth(screen.width);
   }
 
-
   const handleSubmitButton = (e) => {
-    console.log('Se envio la query');
+    handleSearchQuery(document.querySelector('#search').value);
   }
-  const handeSubmitKey = (e) => {
+  const handleSubmitKey = (e) => {
     if (e.keyCode === 13) {
-      console.log('se envio la query');
+      handleSearchQuery(document.querySelector('#search').value);
+    }
+  }
+  
+  const handleSearchQuery = ( value ) => {
+    const query = Validate(value);
+    if (query){
+      navigate(`/search?q=${query}`);
     }
   }
 
@@ -31,7 +41,8 @@ const Home = () => {
           hover:shadow-lg'>
 
             <input type="text" className='w-[85%] pl-4 rounded-l-full outline-none bg-gray-100/0 text-center'
-            onKeyDown={handeSubmitKey}/>
+            onKeyDown={handleSubmitKey}
+            id='search' />
 
             <div className='w-[1px] h-[80%] border-l border-gray-300'></div>
             <button className='w-[15%] h-full rounded-r-full
@@ -46,8 +57,8 @@ const Home = () => {
 
         <footer className='flex flex-col justify-center items-center w-full h-[65px] border-t font-roboto text-sm gap-1'>
           <div className='flex flex-row gap-4 text-gray-600'>
-            <p><a href="" className='hover:underline'>Github</a></p>
-            <p><a href="" className='hover:underline'>LinkedIn</a></p>
+            <p><a href="https://github.com/FacuNBustos/Musicaly" className='hover:underline' target='_blanck'>Github</a></p>
+            <p><a href="https://www.linkedin.com/in/facundo-bustos-goainochea-a46b0220b/" className='hover:underline' target='_blanck'>LinkedIn</a></p>
           </div>
           <p className='font-bold text-gray-400'>Derechos reservados a Facundo Bustos Goainochea</p>
         </footer>
@@ -64,7 +75,8 @@ const Home = () => {
 
         <div className='flex flex-row items-center w-[85vw] h-[35px] bg-[#FFFFFF] border border-gray-200 rounded-full font-roboto shadow-sm shadow-gray-300 text-sm'>
 
-          <input type="text" className='w-[80%] outline-none pl-3'/>
+          <input type="text" className='w-[80%] outline-none pl-3'
+          id='search'/>
           <div className='w-[1px] h-[70%] bg-gray-200'></div>
           <button className='w-[20%]'
           onClick={handleSubmitButton}>
